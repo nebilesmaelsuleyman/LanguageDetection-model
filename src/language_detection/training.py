@@ -68,9 +68,9 @@ def train_model(
     accuracy = evaluate.load("accuracy")
 
     def compute_metrics(eval_pred):
-        predictions, labels_np = eval_pred
+        predictions, true_labels = eval_pred
         preds = predictions.argmax(axis=-1)
-        return accuracy.compute(predictions=preds, references=labels_np)
+        return accuracy.compute(predictions=preds, references=true_labels)
 
     training_args = TrainingArguments(
         output_dir=str(Path(output_dir).parent / "checkpoints"),

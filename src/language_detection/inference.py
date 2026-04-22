@@ -18,6 +18,12 @@ class LanguageDetector:
             logits = self.model(**encoded).logits
         probs = torch.softmax(logits, dim=-1)[0]
         pred_id = int(torch.argmax(probs).item())
-        label = self.model.config.id2label[str(pred_id)] if isinstance(self.model.config.id2label, dict) and str(pred_id) in self.model.config.id2label else self.model.config.id2label[pred_id]
+        label = self._label_for_id(pred_id)
         confidence = float(probs[pred_id].item())
         return label, confidence
+
+    def _label_for_id(self, pred_id: int) -> str:
+        id2label = self.model.config.id2label
+        if isinstance(id2label, dict):
+            return id2label.get(pred_id, id2label.get(str(pred_id), str(pred_id)))
+        return id2label[pred_id]

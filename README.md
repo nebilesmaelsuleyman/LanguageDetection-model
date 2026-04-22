@@ -28,6 +28,6 @@ To run locally:
 2.  Navigate to the project directory.
 3.  Install dependencies: `pip install -r requirements.txt`
 4.  Train model:
-    - `python scripts/train.py --csv /absolute/path/to/data.csv --text-column text --label-column label`
+    - `python scripts/train.py --csv data/train.csv --text-column text --label-column label`
 5.  Run the Gradio app:
     - `python app.py`
