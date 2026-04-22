@@ -42,7 +42,9 @@ def predict_language(text: str) -> str:
 
     config_labels = getattr(MODEL.config, "id2label", None)
     id2label = config_labels if config_labels is not None else EXPECTED_MODEL_LABELS
-    language = id2label.get(str(predicted_index), id2label.get(predicted_index, f"Unknown ({predicted_index})"))
+    language = id2label.get(str(predicted_index))
+    if language is None:
+        language = id2label.get(predicted_index, f"Unknown ({predicted_index})")
 
     return f"Predicted language: {language} (confidence: {confidence:.2%})"
 
