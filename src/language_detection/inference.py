@@ -6,6 +6,12 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
 class LanguageDetector:
+    """Load a fine-tuned language detection model and run predictions.
+
+    Args:
+        model_dir: Directory containing a saved Hugging Face model/tokenizer.
+    """
+
     def __init__(self, model_dir: str = "models/xlm_r_lang_model"):
         model_path = Path(model_dir)
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -13,6 +19,7 @@ class LanguageDetector:
         self.model.eval()
 
     def predict(self, text: str) -> Tuple[str, float]:
+        """Predict the language label for text and return (label, confidence)."""
         encoded = self.tokenizer(text, return_tensors="pt", truncation=True)
         with torch.no_grad():
             logits = self.model(**encoded).logits

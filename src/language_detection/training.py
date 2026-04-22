@@ -26,6 +26,23 @@ def train_model(
     learning_rate: float = 2e-5,
     batch_size: int = 16,
 ):
+    """Train an XLM-RoBERTa language classifier from a CSV file.
+
+    Args:
+        csv_path: Input CSV path.
+        output_dir: Directory where trained model/tokenizer are saved.
+        model_name: Hugging Face model name used as training base.
+        text_column: CSV column containing text.
+        label_column: CSV column containing class labels.
+        test_size: Validation split size.
+        random_state: Seed for deterministic split.
+        epochs: Number of training epochs.
+        learning_rate: Optimizer learning rate.
+        batch_size: Batch size for train/eval.
+
+    Returns:
+        Path to the saved model directory.
+    """
     df = pd.read_csv(csv_path)
     if text_column not in df.columns or label_column not in df.columns:
         raise ValueError(f"CSV must include '{text_column}' and '{label_column}' columns.")
