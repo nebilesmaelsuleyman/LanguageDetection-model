@@ -1,16 +1,24 @@
 # Multilingual Language Detector
 
-This repository contains a deployed version of a multilingual language detection model based on XLM-RoBERTa.
+This repository contains a multilingual language detection app based on XLM-RoBERTa.
 
 The model is trained to classify text into Amharic, Afan Oromo, or English.
 
-## Usage (Hugging Face Spaces)
+## Project structure
 
-This application can be easily deployed to Hugging Face Spaces. The `app.py` script serves a Gradio interface, and the `xlm_r_lang_model` directory contains all necessary model artifacts.
+- `app.py` - Gradio inference app
+- `requirements.txt` - Python dependencies
+- `xlm_r_lang_model/` - local Hugging Face model artifacts (`config.json`, tokenizer files, model weights)
 
-To run locally:
+## Usage (Hugging Face Spaces / local)
 
-1.  Clone this repository.
-2.  Navigate to the `github_model_deployment` directory.
-3.  Install dependencies: `pip install -r requirements.txt`
-4.  Run the Gradio app: `python app.py`
+1. Clone this repository.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Place model files in `xlm_r_lang_model/` (or set `MODEL_DIR` to another path).
+4. Run the app:
+   ```bash
+   python app.py
+   ```
