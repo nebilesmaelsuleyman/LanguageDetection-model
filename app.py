@@ -32,7 +32,7 @@ def predict_language(text: str) -> str:
     if LOAD_ERROR is not None or TOKENIZER is None or MODEL is None:
         return f"Model could not be loaded from '{MODEL_DIR}'. Error: {LOAD_ERROR}"
 
-    encoded = TOKENIZER(text, return_tensors="pt", truncation=True, padding=True)
+    encoded = TOKENIZER(text, return_tensors="pt", truncation=True)
     with torch.no_grad():
         logits = MODEL(**encoded).logits
         probabilities = torch.softmax(logits, dim=1)[0]
@@ -42,8 +42,7 @@ def predict_language(text: str) -> str:
 
     config_labels = getattr(MODEL.config, "id2label", None)
     id2label = config_labels if config_labels is not None else EXPECTED_MODEL_LABELS
-    normalized_labels = {str(key): value for key, value in id2label.items()}
-    language = normalized_labels.get(str(predicted_index), f"Unknown ({predicted_index})")
+    language = id2label.get(str(predicted_index), id2label.get(predicted_index, f"Unknown ({predicted_index})"))
 
     return f"Predicted language: {language} (confidence: {confidence:.2%})"
 
