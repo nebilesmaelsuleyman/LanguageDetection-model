@@ -45,7 +45,10 @@ def train_model(
     """
     df = pd.read_csv(csv_path)
     if text_column not in df.columns or label_column not in df.columns:
-        raise ValueError(f"CSV must include '{text_column}' and '{label_column}' columns.")
+        raise ValueError(
+            f"CSV must include '{text_column}' and '{label_column}' columns. "
+            f"Found columns: {list(df.columns)}"
+        )
 
     labels = sorted(df[label_column].unique().tolist())
     label2id: Dict[str, int] = {label: i for i, label in enumerate(labels)}
@@ -90,7 +93,7 @@ def train_model(
         return accuracy.compute(predictions=preds, references=true_labels)
 
     training_args = TrainingArguments(
-        output_dir=str(Path(output_dir).parent / "checkpoints"),
+        output_dir=str(Path(output_dir) / "checkpoints"),
         learning_rate=learning_rate,
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,

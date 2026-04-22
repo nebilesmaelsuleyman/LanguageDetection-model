@@ -32,5 +32,9 @@ class LanguageDetector:
     def _label_for_id(self, pred_id: int) -> str:
         id2label = self.model.config.id2label
         if isinstance(id2label, dict):
-            return id2label.get(pred_id, id2label.get(str(pred_id), str(pred_id)))
+            if pred_id in id2label:
+                return id2label[pred_id]
+            if str(pred_id) in id2label:
+                return id2label[str(pred_id)]
+            return str(pred_id)
         return id2label[pred_id]
