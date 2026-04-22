@@ -40,8 +40,9 @@ def predict_language(text: str) -> str:
     predicted_index = int(torch.argmax(probabilities).item())
     confidence = float(probabilities[predicted_index].item())
 
-    id2label = getattr(MODEL.config, "id2label", {}) or DEFAULT_LABELS
-    language = id2label.get(str(predicted_index)) or id2label.get(predicted_index) or str(predicted_index)
+    config_labels = getattr(MODEL.config, "id2label", None)
+    id2label = config_labels if config_labels is not None else DEFAULT_LABELS
+    language = id2label.get(str(predicted_index), str(predicted_index))
 
     return f"Predicted language: {language} (confidence: {confidence:.2%})"
 
