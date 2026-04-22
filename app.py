@@ -22,7 +22,7 @@ except Exception as exc:  # pragma: no cover - depends on local model artifacts
     LOAD_ERROR = str(exc)
 
 
-DEFAULT_LABELS = {0: "Amharic", 1: "Afan Oromo", 2: "English"}
+EXPECTED_MODEL_LABELS = {0: "Amharic", 1: "Afan Oromo", 2: "English"}
 
 
 def predict_language(text: str) -> str:
@@ -37,14 +37,13 @@ def predict_language(text: str) -> str:
         logits = MODEL(**encoded).logits
         probabilities = torch.softmax(logits, dim=1)[0]
 
-    predicted_index = int(torch.argmax(probabilities).item())
+    predicted_index = torch.argmax(probabilities).item()
     confidence = float(probabilities[predicted_index].item())
 
     config_labels = getattr(MODEL.config, "id2label", None)
-    id2label = config_labels if config_labels is not None else DEFAULT_LABELS
-    language = id2label.get(predicted_index)
-    if language is None:
-        language = id2label.get(str(predicted_index), str(predicted_index))
+    id2label = config_labels if config_labels is not None else EXPECTED_MODEL_LABELS
+    normalized_labels = {str(key): value for key, value in id2label.items()}
+    language = normalized_labels.get(str(predicted_index), f"Unknown ({predicted_index})")
 
     return f"Predicted language: {language} (confidence: {confidence:.2%})"
 
