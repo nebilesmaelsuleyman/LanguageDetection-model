@@ -29,6 +29,13 @@ class LanguageDetector:
         confidence = float(probs[pred_id].item())
         return label, confidence
 
+    def supported_labels(self) -> list[str]:
+        """Return model labels ordered by their class id."""
+        id2label = self.model.config.id2label
+        if not isinstance(id2label, dict):
+            return list(id2label)
+        return [label for _, label in sorted(id2label.items(), key=lambda item: int(item[0]))]
+
     def _label_for_id(self, pred_id: int) -> str:
         id2label = self.model.config.id2label
         if isinstance(id2label, dict):
@@ -36,5 +43,5 @@ class LanguageDetector:
                 return id2label[pred_id]
             if str(pred_id) in id2label:
                 return id2label[str(pred_id)]
-            return str(pred_id)
+            raise KeyError(f"Missing label mapping for class id {pred_id}.")
         return id2label[pred_id]

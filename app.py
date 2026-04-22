@@ -7,9 +7,7 @@ from src.language_detection.inference import LanguageDetector
 
 MODEL_DIR = os.getenv("MODEL_DIR", "models/xlm_r_lang_model")
 detector = LanguageDetector(model_dir=MODEL_DIR)
-supported_languages = ", ".join(
-    str(label) for _, label in sorted(detector.model.config.id2label.items(), key=lambda item: int(item[0]))
-)
+supported_languages = ", ".join(detector.supported_labels())
 
 
 def predict_language(text: str):
