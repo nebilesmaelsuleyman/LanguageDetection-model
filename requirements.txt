@@ -1,8 +1,11 @@
-datasets
-evaluate
 gradio
-pandas
-scikit-learn
-sentencepiece
+transformers[torch]
 torch
-transformers
+sentencepiece
+datasets
+accelerate
+scikit-learn
+evaluate
+matplotlib
+seaborn
+pandas

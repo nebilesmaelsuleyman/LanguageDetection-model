@@ -1,34 +1,42 @@
 # Multilingual Language Detector
 
-This repository contains a multilingual language detection pipeline based on XLM-RoBERTa.
-
-The model is trained to classify text into Amharic, Afan Oromo, or English.
+This project detects between Amharic, Afan Oromo, and English texts using a fine-tuned `xlm-roberta-base` model.
 
 ## Project Structure
 
-```text
-.
-├── app.py
-├── scripts/
-│   └── train.py
+```
+├── data/               # Place your training JSON files here
+├── models/             # The trained model will be saved here
 ├── src/
-│   └── language_detection/
-│       ├── __init__.py
-│       ├── config.py
-│       ├── inference.py
-│       └── training.py
-└── models/
-    └── xlm_r_lang_model/   # created after training
+│   ├── config.py       # Configuration and hyper-parameters
+│   ├── data.py         # Data loading and preprocessing pipeline
+│   ├── train.py        # Training script
+│   ├── evaluate.py     # Evaluation functions (confusion matrix)
+│   ├── predict.py      # Inference class for predictions
+│   └── app.py          # Gradio Web UI
+├── requirements.txt
+└── README.md
 ```
 
-## Usage
+## Setup
 
-To run locally:
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-1.  Clone this repository.
-2.  Navigate to the project directory.
-3.  Install dependencies: `pip install -r requirements.txt`
-4.  Train model:
-    - `python scripts/train.py --csv data/train.csv --text-column text --label-column label`
-5.  Run the Gradio app:
-    - `python app.py`
+2. To train the model:
+First, add your training JSON files to the `./data` folder (or adjust the `DATA_PATH` in `src/config.py`).
+```bash
+python -m src.train
+```
+
+3. To predict via script:
+```bash
+python -m src.predict
+```
+
+4. To run the web interface:
+```bash
+python -m src.app
+```
