@@ -1,9 +1,11 @@
+gradio
 transformers[torch]
-datasets
+torch
 sentencepiece
+datasets
 accelerate
 scikit-learn
 evaluate
 matplotlib
 seaborn
-gradio
+pandas

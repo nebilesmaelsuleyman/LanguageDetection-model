@@ -1,0 +1,34 @@
+import os
+
+import gradio as gr
+
+from src.language_detection.config import DEFAULT_MODEL_DIR
+from src.language_detection.inference import LanguageDetector
+
+
+MODEL_DIR = os.getenv("MODEL_DIR", DEFAULT_MODEL_DIR)
+detector = LanguageDetector(model_dir=MODEL_DIR)
+supported_languages = ", ".join(detector.supported_labels())
+
+
+def predict_language(text: str):
+    if not text or not text.strip():
+        return "Please enter text.", None
+    label, confidence = detector.predict(text)
+    return label, confidence
+
+
+app = gr.Interface(
+    fn=predict_language,
+    inputs=gr.Textbox(label="Input Text"),
+    outputs=[
+        gr.Textbox(label="Predicted Language"),
+        gr.Number(label="Confidence"),
+    ],
+    title="Multilingual Language Detector",
+    description=f"Detects: {supported_languages}",
+)
+
+
+if __name__ == "__main__":
+    app.launch()
