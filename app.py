@@ -13,7 +13,7 @@ supported_languages = ", ".join(detector.supported_labels())
 
 def predict_language(text: str):
     if not text or not text.strip():
-        return "Please enter text.", 0.0
+        return "Please enter text.", None
     label, confidence = detector.predict(text)
     return label, confidence
 

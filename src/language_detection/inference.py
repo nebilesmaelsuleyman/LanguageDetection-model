@@ -35,7 +35,9 @@ class LanguageDetector:
         """Return model labels ordered by their class id."""
         id2label = self.model.config.id2label
         if not isinstance(id2label, dict):
-            raise TypeError("Expected id2label to be a dict mapping class ids to labels.")
+            raise TypeError(
+                f"Expected id2label to be a dict mapping class ids to labels, got {type(id2label).__name__}."
+            )
         return [label for _, label in sorted(id2label.items(), key=lambda item: int(item[0]))]
 
     def _label_for_id(self, pred_id: int) -> str:

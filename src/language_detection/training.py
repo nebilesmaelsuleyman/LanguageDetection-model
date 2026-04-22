@@ -28,12 +28,12 @@ def train_model(
     learning_rate: float = 2e-5,
     batch_size: int = 16,
 ):
-    """Train an XLM-RoBERTa language classifier from a CSV file.
+    """Train a Hugging Face language classifier from a CSV file.
 
     Args:
         csv_path: Input CSV path.
         output_dir: Directory where trained model/tokenizer are saved.
-        model_name: Hugging Face model name used as training base.
+        model_name: Hugging Face model name used as training base (default: xlm-roberta-base).
         text_column: CSV column containing text.
         label_column: CSV column containing class labels.
         test_size: Validation split size.
