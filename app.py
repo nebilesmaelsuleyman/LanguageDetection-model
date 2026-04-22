@@ -1,63 +1,34 @@
 import os
 
 import gradio as gr
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-MODEL_DIR = os.getenv("MODEL_DIR", "xlm_r_lang_model")
-
-
-def _load_model():
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_DIR)
-    model.eval()
-    return tokenizer, model
+from src.language_detection.config import DEFAULT_MODEL_DIR
+from src.language_detection.inference import LanguageDetector
 
 
-try:
-    TOKENIZER, MODEL = _load_model()
-    LOAD_ERROR = None
-except Exception as exc:  # pragma: no cover - depends on local model artifacts
-    TOKENIZER, MODEL = None, None
-    LOAD_ERROR = str(exc)
+MODEL_DIR = os.getenv("MODEL_DIR", DEFAULT_MODEL_DIR)
+detector = LanguageDetector(model_dir=MODEL_DIR)
+supported_languages = ", ".join(detector.supported_labels())
 
 
-EXPECTED_MODEL_LABELS = {0: "Amharic", 1: "Afan Oromo", 2: "English"}
-
-
-def predict_language(text: str) -> str:
+def predict_language(text: str):
     if not text or not text.strip():
-        return "Please enter text."
-
-    if LOAD_ERROR is not None or TOKENIZER is None or MODEL is None:
-        return f"Model could not be loaded from '{MODEL_DIR}'. Error: {LOAD_ERROR}"
-
-    encoded = TOKENIZER(text, return_tensors="pt", truncation=True)
-    with torch.no_grad():
-        logits = MODEL(**encoded).logits
-        probabilities = torch.softmax(logits, dim=1)[0]
-
-    predicted_index = torch.argmax(probabilities).item()
-    confidence = float(probabilities[predicted_index].item())
-
-    config_labels = getattr(MODEL.config, "id2label", None)
-    id2label = config_labels if config_labels is not None else EXPECTED_MODEL_LABELS
-    language = id2label.get(str(predicted_index))
-    if language is None:
-        language = id2label.get(predicted_index, f"Unknown ({predicted_index})")
-
-    return f"Predicted language: {language} (confidence: {confidence:.2%})"
+        return "Please enter text.", None
+    label, confidence = detector.predict(text)
+    return label, confidence
 
 
-def build_app() -> gr.Interface:
-    return gr.Interface(
-        fn=predict_language,
-        inputs=gr.Textbox(lines=4, placeholder="Enter text..."),
-        outputs=gr.Textbox(label="Prediction"),
-        title="Multilingual Language Detector",
-        description="Detect whether text is Amharic, Afan Oromo, or English.",
-    )
+app = gr.Interface(
+    fn=predict_language,
+    inputs=gr.Textbox(label="Input Text"),
+    outputs=[
+        gr.Textbox(label="Predicted Language"),
+        gr.Number(label="Confidence"),
+    ],
+    title="Multilingual Language Detector",
+    description=f"Detects: {supported_languages}",
+)
 
 
 if __name__ == "__main__":
-    build_app().launch()
+    app.launch()
