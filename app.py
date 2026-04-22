@@ -2,10 +2,11 @@ import os
 
 import gradio as gr
 
+from src.language_detection.config import DEFAULT_MODEL_DIR
 from src.language_detection.inference import LanguageDetector
 
 
-MODEL_DIR = os.getenv("MODEL_DIR", "models/xlm_r_lang_model")
+MODEL_DIR = os.getenv("MODEL_DIR", DEFAULT_MODEL_DIR)
 detector = LanguageDetector(model_dir=MODEL_DIR)
 supported_languages = ", ".join(detector.supported_labels())
 

@@ -13,10 +13,12 @@ from transformers import (
     TrainingArguments,
 )
 
+from .config import DEFAULT_MODEL_DIR
+
 
 def train_model(
     csv_path: str,
-    output_dir: str = "models/xlm_r_lang_model",
+    output_dir: str = DEFAULT_MODEL_DIR,
     model_name: str = "xlm-roberta-base",
     text_column: str = "text",
     label_column: str = "label",

@@ -14,6 +14,7 @@ The model is trained to classify text into Amharic, Afan Oromo, or English.
 ├── src/
 │   └── language_detection/
 │       ├── __init__.py
+│       ├── config.py
 │       ├── inference.py
 │       └── training.py
 └── models/

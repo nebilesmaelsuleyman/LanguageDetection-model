@@ -1,8 +1,10 @@
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+from .config import DEFAULT_MODEL_DIR
 
 
 class LanguageDetector:
@@ -12,7 +14,7 @@ class LanguageDetector:
         model_dir: Directory containing a saved Hugging Face model/tokenizer.
     """
 
-    def __init__(self, model_dir: str = "models/xlm_r_lang_model"):
+    def __init__(self, model_dir: str = DEFAULT_MODEL_DIR):
         model_path = Path(model_dir)
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
@@ -29,11 +31,11 @@ class LanguageDetector:
         confidence = float(probs[pred_id].item())
         return label, confidence
 
-    def supported_labels(self) -> list[str]:
+    def supported_labels(self) -> List[str]:
         """Return model labels ordered by their class id."""
         id2label = self.model.config.id2label
         if not isinstance(id2label, dict):
-            return list(id2label)
+            raise TypeError("Expected id2label to be a dict mapping class ids to labels.")
         return [label for _, label in sorted(id2label.items(), key=lambda item: int(item[0]))]
 
     def _label_for_id(self, pred_id: int) -> str:
