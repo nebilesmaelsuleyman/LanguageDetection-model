@@ -1,5 +1,9 @@
-
-gradio
-transformers
-torch
+transformers[torch]
+datasets
 sentencepiece
+accelerate
+scikit-learn
+evaluate
+matplotlib
+seaborn
+gradio
