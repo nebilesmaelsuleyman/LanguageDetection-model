@@ -1,5 +1,8 @@
-
+datasets
+evaluate
 gradio
-transformers
-torch
+pandas
+scikit-learn
 sentencepiece
+torch
+transformers
